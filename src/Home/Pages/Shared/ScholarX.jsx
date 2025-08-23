@@ -1,9 +1,11 @@
 import React from 'react';
+import { GiOpenBook } from "react-icons/gi";
 
 const ScholarX = () => {
     return (
         <div>
-            <img className='w-30 h-12' src="https://i.ibb.co.com/bMz11C1w/201-F0-C6-E-4644-49-BB-8-CE7-8673-DD6-E1-FA1.png" alt="" />
+           <GiOpenBook size={40} color='teal' />
+           <h1 className='font-bold text-2xl ml-6 -mt-7 text-green-500'>Scholar<span className='text-amber-500'>X</span></h1>
         </div>
     );
 };
