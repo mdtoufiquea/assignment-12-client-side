@@ -2,11 +2,12 @@ import React, { useContext, useState } from 'react';
 import { AuthContext } from '../../../Contexts/AuthContexts/AuthContext';
 import { updateProfile } from 'firebase/auth';
 import Swal from 'sweetalert2';
+import { Link, useNavigate } from 'react-router';
 
 const Register = () => {
     const [error, setError] = useState(null)
-
     const { createUser, signInWithGoogle } = useContext(AuthContext);
+    const navigate = useNavigate();
 
     const handleRegister = (e) => {
         e.preventDefault();
@@ -56,7 +57,10 @@ const Register = () => {
                                         title: "Register Successfully",
                                         showConfirmButton: false,
                                         timer: 1500
-                                    });
+                                    })
+                                        .then(() => {
+                                            navigate('/')
+                                        })
                                 }
                             });
                     })
@@ -94,7 +98,10 @@ const Register = () => {
                             title: "Signup Successfully with Google",
                             showConfirmButton: false,
                             timer: 1500
-                        });
+                        })
+                        .then(() => {
+                            navigate('/')
+                        })
                     });
 
             })
@@ -165,7 +172,8 @@ const Register = () => {
                         SignUp with Google
                     </button>
                     <p className='text-red-500'>{error}</p>
-                    <p className='text-[17px]'>Already you have a account? Please <span className='text-blue-500 font-bold underline'>Login</span></p>
+                    <Link to='/login'><p className='text-[17px]'>Already you have a account? Please <span className='text-blue-500 font-bold underline'>Login</span></p></Link>
+
                 </div>
             </div>
             <div>
