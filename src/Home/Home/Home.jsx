@@ -6,9 +6,9 @@ import Banner from '../Pages/Banner/Banner';
 const Home = () => {
     return (
         <div>
-           <Navbar></Navbar>
+           
            <Banner></Banner>
-           <Footer></Footer>
+           
 
         </div>
     );
