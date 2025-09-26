@@ -48,7 +48,8 @@ const Login = () => {
                 const saveUser = {
                     name: user.displayName,
                     email: user.email,
-                    photo: user.photoURL
+                    photo: user.photoURL,
+                    role: "user"
                 };
 
                 fetch("http://localhost:3000/users", {

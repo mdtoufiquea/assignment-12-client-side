@@ -1,12 +1,12 @@
 import React, { useContext } from 'react';
 import ScholarX from './ScholarX';
-import { Link, useNavigate } from 'react-router';
+import { Link, useNavigate, } from 'react-router';
 import { AuthContext } from '../../../Contexts/AuthContexts/AuthContext';
 import Swal from 'sweetalert2';
 
 const Navbar = () => {
   const { user, loading, logout } = useContext(AuthContext)
- const navigate = useNavigate();
+  const navigate = useNavigate();
   if (loading) {
     return <span className="loading loading-spinner loading-xl"></span>
   }
@@ -14,6 +14,7 @@ const Navbar = () => {
   const handleLogout = () => {
     logout()
       .then(() => {
+
         Swal.fire({
           position: 'top-end',
           icon: 'success',
@@ -21,21 +22,57 @@ const Navbar = () => {
           showConfirmButton: false,
           timer: 1500
         });
-        navigate('/');
-      })
-      .catch(error => {
+
+        navigate("/")
+
+      }).catch(error => {
         Swal.fire({
           icon: 'error',
           title: 'Oops...',
           text: error.message
         });
-      });
-  };
+      })
+  }
+
   const link = <>
-    <Link to='/'><li className='md:ml-6 mb-2'>Home</li></Link>
-    <Link><li className='md:ml-6 mb-2'>All Scholarship</li></Link>
-    <Link> <li className='md:ml-6 mb-2'>User Dashboard</li></Link>
-    <Link><li className='md:ml-6 mb-2'>Admin dashboard</li></Link>
+    <Link to='/'><li  className='md:ml-6 mb-2 cursor-pointer'>Home</li></Link>
+
+    <Link><li  className='md:ml-6 mb-2 cursor-pointer'>All Scholarship</li></Link>
+
+    <li
+      className='md:ml-6 mb-2 cursor-pointer'
+      onClick={() => {
+        if (user) {
+          navigate("/user-dashboard"); 
+        } else {
+          navigate("/login"); 
+        }
+      }}
+    >
+      User Dashboard
+    </li>
+
+    <li  className='md:ml-6 mb-2 cursor-pointer' onClick={() => {
+      if (user?.role === "admin") navigate("/admin-DashBoard");
+      else Swal.fire({
+        icon: "error",
+        title: "Access Denied",
+        text: "You are not Admin",
+        timer: 2000,
+        showConfirmButton: false
+      });
+    }}>Admin Dashboard</li>
+
+    <li  className='md:ml-6 mb-2 cursor-pointer' onClick={() => {
+      if (user?.role === "moderator") navigate("/moderator-dashBoard");
+      else Swal.fire({
+        icon: "warning",
+        title: "Access Denied",
+        text: "Your are not Moderator",
+        timer: 2000,
+        showConfirmButton: false
+      });
+    }}>Moderator Dashboard</li>
 
   </>
   return (
@@ -64,14 +101,19 @@ const Navbar = () => {
         <div className="navbar-end">
           {
             user && <div className='flex'>
-            <p className="hidden md:block lg:block my-auto text-xl font-semibold mr-5">{user.displayName}</p>
-            <img className='rounded-full w-8 mr-3 border-b-gray-950 border-1' src={user.photoURL} alt="" />
-          </div>
+              <p className="hidden md:block lg:block my-auto text-xl font-semibold mr-5">{user.displayName}</p>
+              <img className='rounded-full w-8 h-8 md:mr-3 mr-1 border-b-gray-950 border-1' src={user.photoURL} alt="" />
+            </div>
           }
           {
-            user ? <a onClick={handleLogout} className="btn bg-black text-white">Logout</a> : <Link to='/login'><a className="btn bg-black text-white">Login</a></Link>
+            user ? <button onClick={handleLogout} className="btn bg-black text-white">Logout</button> : <Link to='/login' className="btn bg-black text-white"> <button>Login</button> </Link>
           }
         </div>
+
+
+
+
+
       </div>
     </div>
   );

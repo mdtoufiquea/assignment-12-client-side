@@ -37,7 +37,8 @@ const Register = () => {
                         const saveUser = {
                             name: name,
                             email: email,
-                            photo: photo
+                            photo: photo,
+                            role: "user"
                         };
 
                         fetch("http://localhost:3000/users", {
@@ -82,7 +83,8 @@ const Register = () => {
                 const saveUser = {
                     name: user.displayName,
                     email: user.email,
-                    photo: user.photoURL
+                    photo: user.photoURL,
+                    role: "user"
                 };
 
                 fetch("http://localhost:3000/users", {
@@ -100,7 +102,7 @@ const Register = () => {
                             timer: 1500
                         })
                         .then(() => {
-                            navigate('/')
+                            navigate("/")
                         })
                     });
 

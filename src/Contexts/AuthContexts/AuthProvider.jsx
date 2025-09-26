@@ -11,6 +11,7 @@ const AuthProvider = ({ children }) => {
     const [loading, setLoading] = useState(true)
     const googleProvider = new GoogleAuthProvider();
 
+
     const createUser = (email, password) => {
         setLoading(true)
         return createUserWithEmailAndPassword(auth, email, password);
@@ -31,16 +32,30 @@ const AuthProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        const unsubscribe = onAuthStateChanged(auth, currentUser => {
-            setUser(currentUser)
-            setLoading(false)
+        const unsubscribe = onAuthStateChanged(auth, async currentUser => {
+            if (currentUser) {
+                try {
+                    const res = await fetch(`http://localhost:3000/users/${currentUser.email}`);
+                    const data = await res.json();
+
+                    setUser({
+                        email: currentUser.email,
+                        displayName: currentUser.displayName,
+                        photoURL: currentUser.photoURL,
+                        role: data.role || "user"
+                    });
+                } catch (err) {
+                    setUser(currentUser); 
+                    console.log(err)
+                }
+            } else {
+                setUser(null);
+            }
+            setLoading(false);
         });
 
-        return () => {
-            unsubscribe();
-        }
-    }, [])
-
+        return () => unsubscribe();
+    }, []);
     const userInfo = {
         user,
         loading,
