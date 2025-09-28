@@ -50,7 +50,7 @@ const ModeratorAside = () => {
                     </li>
                     <li>
                         <Link
-                            to=""
+                            to="add-scholarship"
                             className="block p-2 rounded hover:bg-gray-200"
                             onClick={() => setIsOpen(false)}
                         >

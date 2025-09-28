@@ -12,29 +12,29 @@ import Moderator from "../../DashBoard/ModeratorDashBoard/Moderator";
 import Admin from "../../DashBoard/AdminDashBoard/Admin";
 import AddScholarship from "../../Home/Pages/Shared/AddScholarship";
 
- export const router = createBrowserRouter([
+export const router = createBrowserRouter([
   {
     path: "/",
     Component: Root,
     children: [
-        {
-            index: true,
-            Component: Home
-        },
-        {
-          path: '/login',
-          Component: Login
-        },
-        {
-          path: '/register',
-          Component: Register
-        },
-        
-        {
-          path: '/moderator-dashBoard',
-          Component: ModeratorDashBoard
-        },
-        
+      {
+        index: true,
+        Component: Home
+      },
+      {
+        path: '/login',
+        Component: Login
+      },
+      {
+        path: '/register',
+        Component: Register
+      },
+
+      {
+        path: '/moderator-dashBoard',
+        Component: ModeratorDashBoard
+      },
+
     ]
   },
   {
@@ -50,13 +50,13 @@ import AddScholarship from "../../Home/Pages/Shared/AddScholarship";
   {
     path: '/admin-DashBoard',
     Component: AdminDashBoard,
-     children: [
+    children: [
       {
         index: true,
         Component: Admin
       },
-     {
-        path: "add-scholarship", 
+      {
+        path: "add-scholarship",
         Component: AddScholarship,
       },
     ]
@@ -64,10 +64,14 @@ import AddScholarship from "../../Home/Pages/Shared/AddScholarship";
   {
     path: '/moderator-dashBoard',
     Component: ModeratorDashBoard,
-     children: [
+    children: [
       {
         index: true,
         Component: Moderator
+      },
+      {
+        path: "add-scholarship",
+        Component: AddScholarship,
       }
     ]
   },

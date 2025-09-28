@@ -101,7 +101,7 @@ const Navbar = () => {
         <div className="navbar-end">
           {
             user && <div className='flex'>
-              <p className="hidden md:block lg:block my-auto text-xl font-semibold mr-5">{user.displayName}</p>
+              <p className="hidden md:hidden lg:block my-auto text-xl font-semibold mr-5">{user.displayName}</p>
               <img className='rounded-full w-8 h-8 md:mr-3 mr-1 border-b-gray-950 border-1' src={user.photoURL} alt="" />
             </div>
           }
