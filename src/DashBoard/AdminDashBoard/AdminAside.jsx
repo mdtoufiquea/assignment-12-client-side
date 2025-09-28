@@ -7,7 +7,7 @@ const AdminAside = () => {
     return (
         <div>
             <aside
-                className={`fixed lg:static h-screen w-50 bg-gray-100 shadow-md p-4 transform transition-transform duration-300 z-40  font-bold
+                className={`fixed lg:static md:h-screen w-50 bg-gray-100 shadow-md p-4 transform transition-transform duration-300 z-40  font-bold
           ${isOpen ? "translate-x-0" : "-translate-x-full"} 
           lg:translate-x-0`}
             >
@@ -23,7 +23,7 @@ const AdminAside = () => {
                     </li>
                     <li>
                         <Link
-                            to=""
+                            to="add-scholarship"
                             className="block p-2 rounded hover:bg-gray-200"
                             onClick={() => setIsOpen(false)}
                         >

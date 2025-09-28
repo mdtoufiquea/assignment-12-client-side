@@ -41,7 +41,7 @@ const Register = () => {
                             role: "user"
                         };
 
-                        fetch("http://localhost:3000/users", {
+                        fetch("http://localhost:5000/users", {
                             method: "POST",
                             headers: {
                                 "content-type": "application/json"
@@ -87,7 +87,7 @@ const Register = () => {
                     role: "user"
                 };
 
-                fetch("http://localhost:3000/users", {
+                fetch("http://localhost:5000/users", {
                     method: "POST",
                     headers: { "content-type": "application/json" },
                     body: JSON.stringify(saveUser)

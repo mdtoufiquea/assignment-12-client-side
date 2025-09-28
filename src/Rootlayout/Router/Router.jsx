@@ -10,6 +10,7 @@ import UserDashBoard from "../../DashBoard/UserDashBoard/UserDashBoard";
 import MyProfile from "../../DashBoard/UserDashBoard/MyProfile";
 import Moderator from "../../DashBoard/ModeratorDashBoard/Moderator";
 import Admin from "../../DashBoard/AdminDashBoard/Admin";
+import AddScholarship from "../../Home/Pages/Shared/AddScholarship";
 
  export const router = createBrowserRouter([
   {
@@ -53,7 +54,11 @@ import Admin from "../../DashBoard/AdminDashBoard/Admin";
       {
         index: true,
         Component: Admin
-      }
+      },
+     {
+        path: "add-scholarship", 
+        Component: AddScholarship,
+      },
     ]
   },
   {
