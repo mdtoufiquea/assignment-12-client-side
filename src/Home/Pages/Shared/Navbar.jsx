@@ -37,7 +37,7 @@ const Navbar = () => {
   const link = <>
     <Link to='/'><li  className='md:ml-6 mb-2 cursor-pointer'>Home</li></Link>
 
-    <Link><li  className='md:ml-6 mb-2 cursor-pointer'>All Scholarship</li></Link>
+    <Link to="/allScholarships"><li  className='md:ml-6 mb-2 cursor-pointer'>All Scholarship</li></Link>
 
     <li
       className='md:ml-6 mb-2 cursor-pointer'

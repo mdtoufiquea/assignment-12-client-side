@@ -11,6 +11,8 @@ import MyProfile from "../../DashBoard/UserDashBoard/MyProfile";
 import Moderator from "../../DashBoard/ModeratorDashBoard/Moderator";
 import Admin from "../../DashBoard/AdminDashBoard/Admin";
 import AddScholarship from "../../Home/Pages/Shared/AddScholarship";
+import AllScholarships from "../../Home/Pages/Shared/AllScholarships";
+import ScholarshipDetails from "../../Home/Pages/Shared/ScholarshipDetails";
 
 export const router = createBrowserRouter([
   {
@@ -34,6 +36,14 @@ export const router = createBrowserRouter([
         path: '/moderator-dashBoard',
         Component: ModeratorDashBoard
       },
+      {
+        path: "/allScholarships",
+        Component: AllScholarships
+      },
+      {
+        path: '/scholarship/:id',
+        Component: ScholarshipDetails
+      }
 
     ]
   },
