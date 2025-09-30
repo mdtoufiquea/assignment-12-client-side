@@ -51,7 +51,7 @@ const AdminAside = () => {
                     </li>
                     <li>
                         <Link
-                            to=""
+                            to="users-manage"
                             className="block p-2 rounded hover:bg-gray-200"
                             onClick={() => setIsOpen(false)}
                         >

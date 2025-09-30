@@ -102,7 +102,9 @@ const Navbar = () => {
           {
             user && <div className='flex'>
               <p className="hidden md:hidden lg:block my-auto text-xl font-semibold mr-5">{user.displayName}</p>
+             <Link to="/user-dashboard">
               <img className='rounded-full w-8 h-8 md:mr-3 mr-1 border-b-gray-950 border-1' src={user.photoURL} alt="" />
+             </Link>
             </div>
           }
           {
