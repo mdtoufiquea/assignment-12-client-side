@@ -13,6 +13,7 @@ import Admin from "../../DashBoard/AdminDashBoard/Admin";
 import AddScholarship from "../../Home/Pages/Shared/AddScholarship";
 import AllScholarships from "../../Home/Pages/Shared/AllScholarships";
 import ScholarshipDetails from "../../Home/Pages/Shared/ScholarshipDetails";
+import ManageScholarships from "../../Home/Pages/Shared/ManageScholarships";
 
 export const router = createBrowserRouter([
   {
@@ -41,7 +42,7 @@ export const router = createBrowserRouter([
         Component: AllScholarships
       },
       {
-        path: '/scholarship/:id',
+        path: '/scholarships/:id',
         Component: ScholarshipDetails
       }
 
@@ -69,6 +70,10 @@ export const router = createBrowserRouter([
         path: "add-scholarship",
         Component: AddScholarship,
       },
+      {
+        path: 'manage-scholarship',
+        Component: ManageScholarships
+      }
     ]
   },
   {

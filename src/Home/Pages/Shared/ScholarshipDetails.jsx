@@ -63,14 +63,12 @@ const ScholarshipDetails = () => {
                     <p className="font-bold text-gray-600">
                         ScholarshipCategory : {scholarship.scholarshipCategory}
                     </p>
-                    <div className="flex">
-                        <p className="font-bold text-gray-600">
-                            City : {scholarship.city}
-                        </p>
-                        <p className="font-bold text-gray-600">
-                            &nbsp; Country : {scholarship.country}
-                        </p>
-                    </div>
+
+                    <p className="font-bold text-gray-600">City : {scholarship.city}
+                    </p>
+                    <p className="font-bold text-gray-600"> Country : {scholarship.country}
+                    </p>
+
                     <p className="font-bold text-gray-600">
                         SubjectCategory : {scholarship.subjectCategory}
                     </p>

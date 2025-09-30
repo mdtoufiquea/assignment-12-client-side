@@ -44,7 +44,7 @@ const AllScholarships = () => {
 
     const handleViewDetails = (id) => {
         if (user) {
-            navigate(`/scholarship/${id}`);
+            navigate(`/scholarships/${id}`);
         } else {
             navigate("/login"); 
         }
