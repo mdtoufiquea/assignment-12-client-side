@@ -3,7 +3,7 @@ import { MoreVertical, X } from "lucide-react";
 import { Link } from 'react-router';
 
 const AdminAside = () => {
-     const [isOpen, setIsOpen] = useState(false);
+    const [isOpen, setIsOpen] = useState(false);
     return (
         <div>
             <aside
@@ -36,17 +36,17 @@ const AdminAside = () => {
                             className="block p-2 rounded hover:bg-gray-200"
                             onClick={() => setIsOpen(false)}
                         >
-                           Manage Scholarship
+                            Manage Scholarship
 
                         </Link>
                     </li>
                     <li>
                         <Link
-                            to=""
+                            to="applied-scholarships"
                             className="block p-2 rounded hover:bg-gray-200"
                             onClick={() => setIsOpen(false)}
                         >
-                           Manage Applied Application
+                            Manage Applied Application
                         </Link>
                     </li>
                     <li>
@@ -55,7 +55,7 @@ const AdminAside = () => {
                             className="block p-2 rounded hover:bg-gray-200"
                             onClick={() => setIsOpen(false)}
                         >
-                           Manage Users
+                            Manage Users
                         </Link>
                     </li>
                     <li>
@@ -64,7 +64,7 @@ const AdminAside = () => {
                             className="block p-2 rounded hover:bg-gray-200"
                             onClick={() => setIsOpen(false)}
                         >
-                          Manage Review
+                            Manage Review
                         </Link>
                     </li>
                 </ul>

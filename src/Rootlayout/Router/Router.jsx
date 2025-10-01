@@ -16,6 +16,7 @@ import ScholarshipDetails from "../../Home/Pages/Shared/ScholarshipDetails";
 import ManageScholarships from "../../Home/Pages/Shared/ManageScholarships";
 import UsersManage from "../../Home/Pages/Shared/UsersManage";
 import CheckOut from "../../Home/Pages/Shared/CheckOut";
+import AppliedScholarshipManage from "../../Home/Pages/Shared/AppliedScholarshipManage";
 
 export const router = createBrowserRouter([
   {
@@ -48,7 +49,7 @@ export const router = createBrowserRouter([
         Component: ScholarshipDetails
       },
       {
-        path: "/checkout/:id",  
+        path: "/checkout/:id",
         Component: CheckOut,
       },
 
@@ -83,6 +84,10 @@ export const router = createBrowserRouter([
       {
         path: 'users-manage',
         Component: UsersManage
+      },
+      {
+        path: 'applied-scholarships',
+        Component: AppliedScholarshipManage
       }
     ]
   },
@@ -101,6 +106,10 @@ export const router = createBrowserRouter([
       {
         path: 'manage-scholarship',
         Component: ManageScholarships
+      },
+      {
+        path: 'applied-scholarships',
+        Component: AppliedScholarshipManage
       }
 
     ]
