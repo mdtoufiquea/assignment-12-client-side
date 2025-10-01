@@ -95,6 +95,12 @@ const ScholarshipDetails = () => {
                         Deadline : {scholarship.deadline}
                     </p>
                 </div>
+                <button
+                    className="btn btn-success mt-4"
+                    onClick={() => navigate(`/checkout/${scholarship._id}`)}
+                >
+                    Apply Scholarship
+                </button>
             </div>
         </div>
     );

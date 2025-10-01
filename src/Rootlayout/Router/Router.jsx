@@ -15,6 +15,7 @@ import AllScholarships from "../../Home/Pages/Shared/AllScholarships";
 import ScholarshipDetails from "../../Home/Pages/Shared/ScholarshipDetails";
 import ManageScholarships from "../../Home/Pages/Shared/ManageScholarships";
 import UsersManage from "../../Home/Pages/Shared/UsersManage";
+import CheckOut from "../../Home/Pages/Shared/CheckOut";
 
 export const router = createBrowserRouter([
   {
@@ -45,7 +46,11 @@ export const router = createBrowserRouter([
       {
         path: '/scholarships/:id',
         Component: ScholarshipDetails
-      }
+      },
+      {
+        path: "/checkout/:id",  
+        Component: CheckOut,
+      },
 
     ]
   },

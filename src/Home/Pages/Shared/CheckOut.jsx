@@ -1,0 +1,135 @@
+import React, { useEffect, useState, useContext } from "react";
+import { useParams } from "react-router";
+import { useForm } from "react-hook-form";
+import axios from "axios";
+import Swal from "sweetalert2";
+import { loadStripe } from "@stripe/stripe-js";
+import { Elements, CardElement, useStripe, useElements } from "@stripe/react-stripe-js";
+import { AuthContext } from "../../../Contexts/AuthContexts/AuthContext";
+
+const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK);
+
+function CheckoutForm({ scholarship }) {
+    const { user } = useContext(AuthContext);
+    const stripe = useStripe();
+    const elements = useElements();
+    const { register, handleSubmit } = useForm();
+
+    const onSubmit = async (formData) => {
+        try {
+            const res = await axios.post("http://localhost:5000/create-payment-intent", {
+                amount: scholarship.applicationFees,
+            });
+            const clientSecret = res.data.clientSecret;
+
+            const paymentResult = await stripe.confirmCardPayment(clientSecret, {
+                payment_method: { card: elements.getElement(CardElement) },
+            });
+
+            if (paymentResult.error) {
+                Swal.fire("Error", paymentResult.error.message, "error");
+                return;
+            }
+
+            if (paymentResult.paymentIntent.status === "succeeded") {
+                const payload = {
+                    userId: user._id,
+                    userName: user.displayName || user.name,
+                    userEmail: user.email,
+                    scholarshipId: scholarship._id,
+                    universityName: scholarship.universityName,
+                    scholarshipCategory: scholarship.scholarshipCategory,
+                    subjectCategory: scholarship.subjectCategory,
+                    applicantPhone: formData.phone,
+                    applicantPhoto: formData.photo[0]?.name || "",
+                    applicantVillage: formData.village,
+                    applicantDistrict: formData.district,
+                    applicantCountry: formData.country,
+                    applicantGender: formData.gender,
+                    applyingDegree: formData.degree,
+                    sscResult: formData.ssc,
+                    hscResult: formData.hsc,
+                    studyGap: formData.studyGap || "",
+                    appliedAt: new Date(),
+                    payment: {
+                        paymentId: paymentResult.paymentIntent.id,
+                        amount: scholarship.applicationFees,
+                        status: "succeeded",
+                        paidAt: new Date(),
+                    },
+                };
+
+                const response = await axios.post("http://localhost:5000/apply-scholarship", payload);
+
+                if (response.data.success) {
+                    Swal.fire("Success", "Scholarship Applied Successfully!", "success");
+                }
+            }
+        } catch (error) {
+            Swal.fire("Error", error.message, "error");
+        }
+    };
+
+    return (
+        <form onSubmit={handleSubmit(onSubmit)} className="p-4 bg-white rounded shadow max-w-lg mx-auto space-y-3">
+            <h2 className="text-xl font-semibold text-center mb-4">Apply Scholarship & Payment</h2>
+
+            <input {...register("phone")} placeholder="Phone Number" className="input input-bordered w-full" required />
+            <label className="text-gray-500" htmlFor="">Applicant Photo</label>
+            <input type="file" {...register("photo")} className="file-input file-input-bordered w-full" required />
+            <input {...register("village")} placeholder="Village" className="input input-bordered w-full" required />
+            <input {...register("district")} placeholder="District" className="input input-bordered w-full" required />
+            <input {...register("country")} placeholder="Country" className="input input-bordered w-full" required />
+
+            <select {...register("gender")} className="select select-bordered w-full" required>
+                <option value="male">Male</option>
+                <option value="female">Female</option>
+            </select>
+
+            <select {...register("degree")} className="select select-bordered w-full" required>
+                <option value="Diploma">Diploma</option>
+                <option value="Bachelor">Bachelor</option>
+                <option value="Masters">Masters</option>
+            </select>
+
+            <input {...register("ssc")} placeholder="SSC Result" className="input input-bordered w-full" required />
+            <input {...register("hsc")} placeholder="HSC Result" className="input input-bordered w-full" required />
+
+            <select {...register("studyGap")} className="select select-bordered w-full">
+                <option value="">No Study Gap</option>
+                <option value="1 year">1 year</option>
+                <option value="2+ years">2+ years</option>
+            </select>
+
+           
+            <input defaultValue={scholarship.universityName} readOnly className="input input-bordered w-full bg-gray-100" required />
+            <input defaultValue={scholarship.scholarshipCategory} readOnly className="input input-bordered w-full bg-gray-100" required/>
+            <input defaultValue={scholarship.subjectCategory} readOnly className="input input-bordered w-full bg-gray-100" required />
+
+            <CardElement className="border p-3 rounded" />
+
+            <button type="submit" className="btn btn-primary w-full" disabled={!stripe}>
+                Pay & Apply
+            </button>
+        </form>
+    );
+}
+
+export default function CheckOut() {
+    const { id } = useParams();
+    const [scholarship, setScholarship] = useState(null);
+
+    useEffect(() => {
+        fetch(`http://localhost:5000/scholarships/${id}`)
+            .then((res) => res.json())
+            .then((data) => setScholarship(data.data));
+    }, [id]);
+
+    if (!scholarship) return <p className="text-center mt-10">Loading...</p>;
+
+    return (
+        <Elements stripe={stripePromise}>
+            <CheckoutForm scholarship={scholarship} />
+        </Elements>
+    );
+}
