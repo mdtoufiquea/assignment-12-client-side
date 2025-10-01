@@ -9,29 +9,73 @@ import { AuthContext } from "../../../Contexts/AuthContexts/AuthContext";
 
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK);
 
-function CheckoutForm({ scholarship }) {
+export default function CheckOut() {
+    const { id } = useParams();
+    const [scholarship, setScholarship] = useState(null);
+    const [paymentCompleted, setPaymentCompleted] = useState(false);
+    const [paymentId, setPaymentId] = useState(null);
     const { user } = useContext(AuthContext);
-    const stripe = useStripe();
-    const elements = useElements();
-    const { register, handleSubmit } = useForm();
 
-    const onSubmit = async (formData) => {
-        try {
-            const res = await axios.post("http://localhost:5000/create-payment-intent", {
-                amount: scholarship.applicationFees,
-            });
-            const clientSecret = res.data.clientSecret;
+    useEffect(() => {
+        fetch(`http://localhost:5000/scholarships/${id}`)
+            .then((res) => res.json())
+            .then((data) => setScholarship(data.data));
+    }, [id]);
 
-            const paymentResult = await stripe.confirmCardPayment(clientSecret, {
-                payment_method: { card: elements.getElement(CardElement) },
-            });
+    if (!scholarship) return <p className="text-center mt-10">Loading...</p>;
 
-            if (paymentResult.error) {
-                Swal.fire("Error", paymentResult.error.message, "error");
-                return;
+    // Payment Form
+    function PaymentForm() {
+        const stripe = useStripe();
+        const elements = useElements();
+
+        const handlePayment = async () => {
+            try {
+                const res = await axios.post("http://localhost:5000/create-payment-intent", {
+                    amount: scholarship.applicationFees,
+                });
+                const clientSecret = res.data.clientSecret;
+
+                const paymentResult = await stripe.confirmCardPayment(clientSecret, {
+                    payment_method: { card: elements.getElement(CardElement) },
+                });
+
+                if (paymentResult.error) {
+                    Swal.fire("Error", paymentResult.error.message, "error");
+                    return;
+                }
+
+                if (paymentResult.paymentIntent.status === "succeeded") {
+                    Swal.fire("Success", "Payment Successful!", "success");
+                    setPaymentId(paymentResult.paymentIntent.id);
+                    setPaymentCompleted(true);
+                }
+            } catch (error) {
+                Swal.fire("Error", error.message, "error");
             }
+        };
 
-            if (paymentResult.paymentIntent.status === "succeeded") {
+        return (
+            <div className="p-4 bg-white rounded shadow max-w-lg mx-auto space-y-3">
+                <h2 className="text-xl font-semibold text-center mb-4">Payment</h2>
+                <CardElement className="border p-3 rounded" />
+                <button
+                    onClick={handlePayment}
+                    className="btn btn-primary w-full mt-4"
+                    disabled={!stripe}
+                >
+                    Pay
+                </button>
+            </div>
+        );
+    }
+
+    // Applicant Form
+    function ApplicantForm() {
+        const { register, handleSubmit } = useForm();
+
+        const onSubmit = async (formData) => {
+            try {
                 const payload = {
                     userId: user._id,
                     userName: user.displayName || user.name,
@@ -52,7 +96,7 @@ function CheckoutForm({ scholarship }) {
                     studyGap: formData.studyGap || "",
                     appliedAt: new Date(),
                     payment: {
-                        paymentId: paymentResult.paymentIntent.id,
+                        paymentId,
                         amount: scholarship.applicationFees,
                         status: "succeeded",
                         paidAt: new Date(),
@@ -64,72 +108,56 @@ function CheckoutForm({ scholarship }) {
                 if (response.data.success) {
                     Swal.fire("Success", "Scholarship Applied Successfully!", "success");
                 }
+            } catch (error) {
+                Swal.fire("Error", error.message, "error");
             }
-        } catch (error) {
-            Swal.fire("Error", error.message, "error");
-        }
-    };
+        };
 
-    return (
-        <form onSubmit={handleSubmit(onSubmit)} className="p-4 bg-white rounded shadow max-w-lg mx-auto space-y-3">
-            <h2 className="text-xl font-semibold text-center mb-4">Apply Scholarship & Payment</h2>
+        return (
+            <form onSubmit={handleSubmit(onSubmit)} className="p-4 bg-white rounded shadow max-w-lg mx-auto space-y-3">
+                <h2 className="text-xl font-semibold text-center mb-4">Applicant Information</h2>
 
-            <input {...register("phone")} placeholder="Phone Number" className="input input-bordered w-full" required />
-            <label className="text-gray-500" htmlFor="">Applicant Photo</label>
-            <input type="file" {...register("photo")} className="file-input file-input-bordered w-full" required />
-            <input {...register("village")} placeholder="Village" className="input input-bordered w-full" required />
-            <input {...register("district")} placeholder="District" className="input input-bordered w-full" required />
-            <input {...register("country")} placeholder="Country" className="input input-bordered w-full" required />
+                <input {...register("phone")} placeholder="Phone Number" className="input input-bordered w-full" required />
+                <label>Applicant Photo</label>
+                <input type="file" {...register("photo")} className="file-input file-input-bordered w-full" required />
+                <input {...register("village")} placeholder="Village" className="input input-bordered w-full" required />
+                <input {...register("district")} placeholder="District" className="input input-bordered w-full" required />
+                <input {...register("country")} placeholder="Country" className="input input-bordered w-full" required />
 
-            <select {...register("gender")} className="select select-bordered w-full" required>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-            </select>
+                <select {...register("gender")} className="select select-bordered w-full" required>
+                    <option value="male">Male</option>
+                    <option value="female">Female</option>
+                </select>
 
-            <select {...register("degree")} className="select select-bordered w-full" required>
-                <option value="Diploma">Diploma</option>
-                <option value="Bachelor">Bachelor</option>
-                <option value="Masters">Masters</option>
-            </select>
+                <select {...register("degree")} className="select select-bordered w-full" required>
+                    <option value="Diploma">Diploma</option>
+                    <option value="Bachelor">Bachelor</option>
+                    <option value="Masters">Masters</option>
+                </select>
 
-            <input {...register("ssc")} placeholder="SSC Result" className="input input-bordered w-full" required />
-            <input {...register("hsc")} placeholder="HSC Result" className="input input-bordered w-full" required />
+                <input {...register("ssc")} placeholder="SSC Result" className="input input-bordered w-full" required />
+                <input {...register("hsc")} placeholder="HSC Result" className="input input-bordered w-full" required />
 
-            <select {...register("studyGap")} className="select select-bordered w-full">
-                <option value="">No Study Gap</option>
-                <option value="1 year">1 year</option>
-                <option value="2+ years">2+ years</option>
-            </select>
+                <select {...register("studyGap")} className="select select-bordered w-full">
+                    <option value="">No Study Gap</option>
+                    <option value="1 year">1 year</option>
+                    <option value="2+ years">2+ years</option>
+                </select>
 
-           
-            <input defaultValue={scholarship.universityName} readOnly className="input input-bordered w-full bg-gray-100" required />
-            <input defaultValue={scholarship.scholarshipCategory} readOnly className="input input-bordered w-full bg-gray-100" required/>
-            <input defaultValue={scholarship.subjectCategory} readOnly className="input input-bordered w-full bg-gray-100" required />
+                <input defaultValue={scholarship.universityName} readOnly className="input input-bordered w-full bg-gray-100" required />
+                <input defaultValue={scholarship.scholarshipCategory} readOnly className="input input-bordered w-full bg-gray-100" required />
+                <input defaultValue={scholarship.subjectCategory} readOnly className="input input-bordered w-full bg-gray-100" required />
 
-            <CardElement className="border p-3 rounded" />
-
-            <button type="submit" className="btn btn-primary w-full" disabled={!stripe}>
-                Pay & Apply
-            </button>
-        </form>
-    );
-}
-
-export default function CheckOut() {
-    const { id } = useParams();
-    const [scholarship, setScholarship] = useState(null);
-
-    useEffect(() => {
-        fetch(`http://localhost:5000/scholarships/${id}`)
-            .then((res) => res.json())
-            .then((data) => setScholarship(data.data));
-    }, [id]);
-
-    if (!scholarship) return <p className="text-center mt-10">Loading...</p>;
+                <button type="submit" className="btn btn-primary w-full mt-4">
+                    Apply
+                </button>
+            </form>
+        );
+    }
 
     return (
         <Elements stripe={stripePromise}>
-            <CheckoutForm scholarship={scholarship} />
+            {!paymentCompleted ? <PaymentForm /> : <ApplicantForm />}
         </Elements>
     );
 }
