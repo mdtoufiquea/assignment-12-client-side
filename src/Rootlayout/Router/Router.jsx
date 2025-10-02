@@ -20,6 +20,7 @@ import AppliedScholarshipManage from "../../Home/Pages/Shared/AppliedScholarship
 import MyApplication from "../../DashBoard/UserDashBoard/MyApplication";
 import MyReviews from "../../DashBoard/UserDashBoard/Myreviews";
 import AllReviews from "../../DashBoard/AdminDashBoard/AllReviews";
+import NotFound from "../../Home/Pages/Shared/NotFound";
 
 export const router = createBrowserRouter([
   {
@@ -55,6 +56,10 @@ export const router = createBrowserRouter([
         path: "/checkout/:id",
         Component: CheckOut,
       },
+      {
+        path: "*",
+        Component: NotFound
+      }
 
     ]
   },
@@ -73,6 +78,10 @@ export const router = createBrowserRouter([
       {
         path: 'my-reviews',
         Component: MyReviews
+      },
+      {
+        path: "*",
+        Component: NotFound
       }
     ]
   },
@@ -103,6 +112,10 @@ export const router = createBrowserRouter([
       {
         path: "all-reviews",
         Component: AllReviews
+      },
+      {
+        path: "*",
+        Component: NotFound
       }
     ]
   },
@@ -129,6 +142,10 @@ export const router = createBrowserRouter([
       {
         path: "all-reviews",
         Component: AllReviews
+      },
+      {
+        path: "*",
+        Component: NotFound
       }
 
     ]

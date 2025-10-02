@@ -1,8 +1,10 @@
 import React, { useContext, useState } from "react";
 import Swal from "sweetalert2";
 import { AuthContext } from "../../../Contexts/AuthContexts/AuthContext";
+import { useNavigate } from "react-router";
 
 const AddScholarship = () => {
+    const navigate = useNavigate()
     const { user, loading } = useContext(AuthContext)
     const [formData, setFormData] = useState({
         scholarshipName: "",
@@ -70,6 +72,9 @@ const AddScholarship = () => {
                     postDate: "",
                     email: "",
                 });
+
+                navigate('/allScholarships')
+
             } else {
                 Swal.fire({
                     icon: "error",

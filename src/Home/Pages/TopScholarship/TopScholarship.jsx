@@ -36,7 +36,7 @@ const TopScholarship = () => {
                         className="card bg-base-100  shadow-sm"
                     >
                         <figure>
-                            <img className="w-full h-60"
+                            <img className="w-full h-60 lg:h-110"
                                 src={`http://localhost:5000/${scholarship.universityImage.replace(
                                     /\\/g,
                                     "/"
