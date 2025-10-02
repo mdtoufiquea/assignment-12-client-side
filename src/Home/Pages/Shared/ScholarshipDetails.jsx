@@ -2,19 +2,20 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { AuthContext } from '../../../Contexts/AuthContexts/AuthContext';
 import Swal from 'sweetalert2';
+import ShowReviews from './ShowReviews';
 
 const ScholarshipDetails = () => {
 
     const { id } = useParams();
-    const { user, loading } = useContext(AuthContext);
+    const { loading } = useContext(AuthContext);
     const navigate = useNavigate();
     const [scholarship, setScholarship] = useState(null);
 
-    useEffect(() => {
-        if (!user) {
-            navigate("/login");
-        }
-    }, [user, navigate]);
+    // useEffect(() => {
+    //     if (!user) {
+    //         navigate("/login");
+    //     }
+    // }, [user, navigate]);
 
     useEffect(() => {
         fetch(`http://localhost:5000/scholarships/${id}`)
