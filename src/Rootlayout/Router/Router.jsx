@@ -19,6 +19,7 @@ import CheckOut from "../../Home/Pages/Shared/CheckOut";
 import AppliedScholarshipManage from "../../Home/Pages/Shared/AppliedScholarshipManage";
 import MyApplication from "../../DashBoard/UserDashBoard/MyApplication";
 import MyReviews from "../../DashBoard/UserDashBoard/Myreviews";
+import AllReviews from "../../DashBoard/AdminDashBoard/AllReviews";
 
 export const router = createBrowserRouter([
   {
@@ -98,6 +99,10 @@ export const router = createBrowserRouter([
       {
         path: 'applied-scholarships',
         Component: AppliedScholarshipManage
+      },
+      {
+        path: "all-reviews",
+        Component: AllReviews
       }
     ]
   },
@@ -120,6 +125,10 @@ export const router = createBrowserRouter([
       {
         path: 'applied-scholarships',
         Component: AppliedScholarshipManage
+      },
+      {
+        path: "all-reviews",
+        Component: AllReviews
       }
 
     ]
