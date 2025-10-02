@@ -17,6 +17,7 @@ import ManageScholarships from "../../Home/Pages/Shared/ManageScholarships";
 import UsersManage from "../../Home/Pages/Shared/UsersManage";
 import CheckOut from "../../Home/Pages/Shared/CheckOut";
 import AppliedScholarshipManage from "../../Home/Pages/Shared/AppliedScholarshipManage";
+import MyApplication from "../../DashBoard/UserDashBoard/MyApplication";
 
 export const router = createBrowserRouter([
   {
@@ -62,6 +63,10 @@ export const router = createBrowserRouter([
       {
         index: true,
         Component: MyProfile
+      },
+      {
+        path: 'my-applications',
+        Component: MyApplication
       }
     ]
   },
