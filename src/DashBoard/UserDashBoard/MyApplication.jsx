@@ -99,7 +99,7 @@ const MyApplication = () => {
     };
 
     return (
-        <div className="-ml-10  mt-10">
+        <div className="-ml-10  mt-10 lg:-ml-0">
             <h2 className="text-2xl font-bold mb-4 text-center">My Applications</h2>
 
             {applications.length === 0 ? (

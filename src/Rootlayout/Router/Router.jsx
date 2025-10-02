@@ -18,6 +18,7 @@ import UsersManage from "../../Home/Pages/Shared/UsersManage";
 import CheckOut from "../../Home/Pages/Shared/CheckOut";
 import AppliedScholarshipManage from "../../Home/Pages/Shared/AppliedScholarshipManage";
 import MyApplication from "../../DashBoard/UserDashBoard/MyApplication";
+import MyReviews from "../../DashBoard/UserDashBoard/Myreviews";
 
 export const router = createBrowserRouter([
   {
@@ -67,6 +68,10 @@ export const router = createBrowserRouter([
       {
         path: 'my-applications',
         Component: MyApplication
+      },
+      {
+        path: 'my-reviews',
+        Component: MyReviews
       }
     ]
   },

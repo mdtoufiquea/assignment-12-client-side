@@ -32,7 +32,7 @@ const UserAside = () => {
                     </li>
                     <li>
                         <Link
-                            to="/user-dashboard"
+                            to="my-reviews"
                             className="block p-2 rounded hover:bg-gray-200"
                             onClick={() => setIsOpen(false)}
                         >
