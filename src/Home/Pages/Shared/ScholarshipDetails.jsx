@@ -13,7 +13,7 @@ const ScholarshipDetails = () => {
    
 
     useEffect(() => {
-        fetch(`http://localhost:5000/scholarships/${id}`)
+        fetch(`https://assignmetn-12-server-side.vercel.app/scholarships/${id}`)
             .then((res) => res.json())
             .then((data) => setScholarship(data.data))
             .catch(() => Swal.fire({
@@ -44,7 +44,7 @@ const ScholarshipDetails = () => {
             >
                 <figure>
                     <img
-                        src={`http://localhost:5000/${scholarship.universityImage.replace(
+                        src={`https://assignmetn-12-server-side.vercel.app/${scholarship.universityImage.replace(
                             /\\/g,
                             "/"
                         )}`}

@@ -24,7 +24,7 @@ const ManageScholarships = () => {
 
     const fetchScholarships = () => {
         setLoading(true);
-        fetch("http://localhost:5000/scholarships")
+        fetch("https://assignmetn-12-server-side.vercel.app/scholarships")
             .then((res) => res.json())
             .then((data) => {
                 console.log("Fetched scholarships:", data?.data);
@@ -90,7 +90,7 @@ const ManageScholarships = () => {
         }
 
         try {
-            const res = await fetch(`http://localhost:5000/scholarships/${scholarshipId}`, {
+            const res = await fetch(`https://assignmetn-12-server-side.vercel.app/scholarships/${scholarshipId}`, {
                 method: "PUT",
                 body: formDataObj,
             });
@@ -157,7 +157,7 @@ const ManageScholarships = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const res = await fetch(`http://localhost:5000/scholarships/${id}`, {
+                    const res = await fetch(`https://assignmetn-12-server-side.vercel.app/scholarships/${id}`, {
                         method: "DELETE",
                     });
                     const data = await res.json();
@@ -242,7 +242,7 @@ const ManageScholarships = () => {
                                             <div className="flex items-center gap-2">
                                                 {scholarship.universityImage && (
                                                     <img
-                                                        src={`http://localhost:5000/${scholarship.universityImage}`}
+                                                        src={`https://assignmetn-12-server-side.vercel.app/${scholarship.universityImage}`}
                                                         alt={scholarship.universityName || "University"}
                                                         className="w-6 h-6 sm:w-8 sm:h-8 rounded-full object-cover"
                                                         onError={(e) => {

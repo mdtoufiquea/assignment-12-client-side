@@ -17,7 +17,7 @@ export default function CheckOut() {
     const { user } = useContext(AuthContext);
 
     useEffect(() => {
-        fetch(`http://localhost:5000/scholarships/${id}`)
+        fetch(`https://assignmetn-12-server-side.vercel.app/scholarships/${id}`)
             .then((res) => res.json())
             .then((data) => setScholarship(data.data));
     }, [id]);
@@ -31,7 +31,7 @@ export default function CheckOut() {
 
         const handlePayment = async () => {
             try {
-                const res = await axios.post("http://localhost:5000/create-payment-intent", {
+                const res = await axios.post("https://assignmetn-12-server-side.vercel.app/create-payment-intent", {
                     amount: scholarship.applicationFees,
                 });
                 const clientSecret = res.data.clientSecret;
@@ -103,7 +103,7 @@ export default function CheckOut() {
                     },
                 };
 
-                const response = await axios.post("http://localhost:5000/apply-scholarship", payload);
+                const response = await axios.post("https://assignmetn-12-server-side.vercel.app/apply-scholarship", payload);
 
                 if (response.data.success) {
                     Swal.fire("Success", "Scholarship Applied Successfully!", "success");

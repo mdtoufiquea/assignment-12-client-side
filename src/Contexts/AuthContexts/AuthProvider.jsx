@@ -35,7 +35,7 @@ const AuthProvider = ({ children }) => {
         const unsubscribe = onAuthStateChanged(auth, async currentUser => {
             if (currentUser) {
                 try {
-                    const res = await fetch(`http://localhost:5000/users/${currentUser.email}`);
+                    const res = await fetch(`https://assignmetn-12-server-side.vercel.app/users/${currentUser.email}`);
                     const data = await res.json();
 
                     setUser({

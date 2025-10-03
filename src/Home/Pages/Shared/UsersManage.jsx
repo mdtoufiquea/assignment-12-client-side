@@ -6,14 +6,14 @@ const UsersManage = () => {
     const [filter, setFilter] = useState("all");
 
     useEffect(() => {
-        fetch("http://localhost:5000/users")
+        fetch("https://assignmetn-12-server-side.vercel.app/users")
             .then(res => res.json())
             .then(data => setUsers(data));
     }, []);
 
 
     const handleRoleChange = (id, role) => {
-        fetch(`http://localhost:5000/users/${id}`, {
+        fetch(`https://assignmetn-12-server-side.vercel.app/users/${id}`, {
             method: "PATCH",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({ role }),
@@ -36,7 +36,7 @@ const UsersManage = () => {
             confirmButtonText: "Yes, delete it!"
         }).then((result) => {
             if (result.isConfirmed) {
-                fetch(`http://localhost:5000/users/${id}`, { method: "DELETE" })
+                fetch(`https://assignmetn-12-server-side.vercel.app/users/${id}`, { method: "DELETE" })
                     .then(res => res.json())
                     .then(() => {
                         setUsers(users.filter(u => u._id !== id));

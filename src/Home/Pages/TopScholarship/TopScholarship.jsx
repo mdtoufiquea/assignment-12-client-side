@@ -8,7 +8,7 @@ const TopScholarship = () => {
     const [scholarships, setScholarships] = useState([]);
 
     useEffect(() => {
-        fetch("http://localhost:5000/top-scholarships")
+        fetch("https://assignmetn-12-server-side.vercel.app/top-scholarships")
             .then(res => res.json())
             .then(data => setScholarships(data));
     }, []);
@@ -37,7 +37,7 @@ const TopScholarship = () => {
                     >
                         <figure>
                             <img className="w-full h-60 lg:h-110"
-                                src={`http://localhost:5000/${scholarship.universityImage.replace(
+                                src={`https://assignmetn-12-server-side.vercel.app/${scholarship.universityImage.replace(
                                     /\\/g,
                                     "/"
                                 )}`}

@@ -15,7 +15,7 @@ const MyReviews = () => {
             if (!user?.email) return;
             setLoading(true);
             try {
-                const res = await axios.get(`http://localhost:5000/reviews/${user.email}`);
+                const res = await axios.get(`https://assignmetn-12-server-side.vercel.app/reviews/${user.email}`);
                 console.log("GET /reviews/:email response:", res.data);
                 
                 const arr = Array.isArray(res.data?.data) ? res.data.data : [];
@@ -43,7 +43,7 @@ const MyReviews = () => {
         }).then(async (result) => {
             if (result.isConfirmed) {
                 try {
-                    const res = await axios.delete(`http://localhost:5000/reviews/${id}`);
+                    const res = await axios.delete(`https://assignmetn-12-server-side.vercel.app/reviews/${id}`);
                     console.log("DELETE /reviews/:id response:", res.data);
                     if (res.data?.success) {
                         setReviews((prev) => prev.filter((rev) => rev._id !== id));
@@ -73,7 +73,7 @@ const MyReviews = () => {
 
         try {
             const res = await axios.put(
-                `http://localhost:5000/reviews/${editReview._id}`,
+                `https://assignmetn-12-server-side.vercel.app/reviews/${editReview._id}`,
                 {
                     rating: Number(formData.rating), 
                     comment: formData.comment

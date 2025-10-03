@@ -52,7 +52,7 @@ const Login = () => {
                     role: "user"
                 };
 
-                fetch("http://localhost:5000/users", {
+                fetch("https://assignmetn-12-server-side.vercel.app/users", {
                     method: "POST",
                     headers: { "content-type": "application/json" },
                     body: JSON.stringify(saveUser)

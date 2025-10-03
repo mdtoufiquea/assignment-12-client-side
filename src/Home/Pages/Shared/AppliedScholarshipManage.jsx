@@ -32,7 +32,7 @@ const AppliedScholarshipManage = () => {
 
     const fetchApplications = async () => {
         try {
-            const res = await axios.get("http://localhost:5000/applied-scholarships");
+            const res = await axios.get("https://assignmetn-12-server-side.vercel.app/applied-scholarships");
             setApplications(res.data.data);
         } catch (error) {
             console.error(error);
@@ -42,7 +42,7 @@ const AppliedScholarshipManage = () => {
     const handleFeedbackSubmit = async () => {
         if (!feedbackText) return Swal.fire("Error", "Feedback cannot be empty!", "error");
         try {
-            await axios.post(`http://localhost:5000/applied-scholarships/${selectedApplication._id}/feedback`, {
+            await axios.post(`https://assignmetn-12-server-side.vercel.app/applied-scholarships/${selectedApplication._id}/feedback`, {
                 feedback: feedbackText,
             });
             Swal.fire("Success", "Feedback submitted successfully!", "success");
@@ -65,7 +65,7 @@ const AppliedScholarshipManage = () => {
         });
         if (confirm.isConfirmed) {
             try {
-                const res = await axios.put(`http://localhost:5000/applied-scholarships/${applicationId}/status`, {
+                const res = await axios.put(`https://assignmetn-12-server-side.vercel.app/applied-scholarships/${applicationId}/status`, {
                     status: "Rejected",
                 });
 

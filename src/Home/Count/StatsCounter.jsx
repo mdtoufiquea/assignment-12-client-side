@@ -5,7 +5,7 @@ const StatsCounter = () => {
     const [stats, setStats] = useState({ users: 0, scholarships: 0, applied: 0 });
 
     useEffect(() => {
-        fetch("http://localhost:5000/stats")
+        fetch("https://assignmetn-12-server-side.vercel.app/stats")
             .then(res => res.json())
             .then(data => setStats(data));
     }, []);

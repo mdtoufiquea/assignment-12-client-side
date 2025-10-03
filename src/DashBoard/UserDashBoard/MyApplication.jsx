@@ -16,7 +16,7 @@ const MyApplication = () => {
     useEffect(() => {
         if (user?.email) {
             axios
-                .get(`http://localhost:5000/applied-scholarships/user/${user.email}`)
+                .get(`https://assignmetn-12-server-side.vercel.app/applied-scholarships/user/${user.email}`)
                 .then((res) => setApplications(res.data.data || []))
                 .catch((err) => console.error(err));
         }
@@ -33,7 +33,7 @@ const MyApplication = () => {
             if (result.isConfirmed) {
                 try {
                     await axios.put(
-                        `http://localhost:5000/applied-scholarships/${id}/status`,
+                        `https://assignmetn-12-server-side.vercel.app/applied-scholarships/${id}/status`,
                         { status: "Rejected" }
                     );
                     Swal.fire("Cancelled!", "Your application has been cancelled.", "success");
@@ -52,7 +52,7 @@ const MyApplication = () => {
         e.preventDefault();
         try {
             await axios.put(
-                `http://localhost:5000/applied-scholarships/${editApp._id}`,
+                `https://assignmetn-12-server-side.vercel.app/applied-scholarships/${editApp._id}`,
                 editApp
             );
             Swal.fire("Updated!", "Application updated successfully", "success");
@@ -81,7 +81,7 @@ const MyApplication = () => {
                 userEmail: user?.email,
                 userImage: user?.photoURL || "",
             };
-            await axios.post("http://localhost:5000/reviews", reviewData);
+            await axios.post("https://assignmetn-12-server-side.vercel.app/reviews", reviewData);
             Swal.fire("Success", "Review submitted!", "success");
             setReviewApp(null);
             setReview({ rating: "", comment: "" });

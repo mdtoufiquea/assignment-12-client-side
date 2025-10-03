@@ -11,7 +11,7 @@ const AllScholarships = () => {
     const { user, loading } = useContext(AuthContext);
 
     useEffect(() => {
-        fetch("http://localhost:5000/scholarships")
+        fetch("https://assignmetn-12-server-side.vercel.app/scholarships")
             .then((res) => res.json())
             .then((data) => {
                 setScholarships(data.data);
@@ -78,7 +78,7 @@ const AllScholarships = () => {
                         >
                             <figure>
                                 <img className="w-full h-60"
-                                    src={`http://localhost:5000/${scholarship.universityImage.replace(
+                                    src={`https://assignmetn-12-server-side.vercel.app/${scholarship.universityImage.replace(
                                         /\\/g,
                                         "/"
                                     )}`}

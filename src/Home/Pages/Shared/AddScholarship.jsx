@@ -41,7 +41,7 @@ const AddScholarship = () => {
         }
 
         try {
-            const res = await fetch("http://localhost:5000/scholarships", {
+            const res = await fetch("https://assignmetn-12-server-side.vercel.app/scholarships", {
                 method: "POST",
                 body: dataToSend,
             });

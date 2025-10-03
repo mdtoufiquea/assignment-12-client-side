@@ -10,7 +10,7 @@ const AllReviews = () => {
         const fetchReviews = async () => {
             setLoading(true);
             try {
-                const res = await axios.get("http://localhost:5000/reviews");
+                const res = await axios.get("https://assignmetn-12-server-side.vercel.app/reviews");
                 console.log("GET /reviews response:", res.data);
                 const arr = Array.isArray(res.data?.data) ? res.data.data : [];
                 setReviews(arr);
@@ -36,7 +36,7 @@ const AllReviews = () => {
 
         if (confirm.isConfirmed) {
             try {
-                const res = await axios.delete(`http://localhost:5000/reviews/${id}`);
+                const res = await axios.delete(`https://assignmetn-12-server-side.vercel.app/reviews/${id}`);
                 console.log("DELETE response:", res.data);
 
                 if (res.data?.deletedCount > 0) {
