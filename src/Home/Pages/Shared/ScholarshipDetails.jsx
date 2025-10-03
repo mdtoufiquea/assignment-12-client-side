@@ -2,20 +2,15 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate, useParams } from 'react-router';
 import { AuthContext } from '../../../Contexts/AuthContexts/AuthContext';
 import Swal from 'sweetalert2';
-import ShowReviews from './ShowReviews';
 
 const ScholarshipDetails = () => {
 
     const { id } = useParams();
-    const { loading } = useContext(AuthContext);
+    const {user, loading } = useContext(AuthContext);
     const navigate = useNavigate();
     const [scholarship, setScholarship] = useState(null);
 
-    // useEffect(() => {
-    //     if (!user) {
-    //         navigate("/login");
-    //     }
-    // }, [user, navigate]);
+   
 
     useEffect(() => {
         fetch(`http://localhost:5000/scholarships/${id}`)
@@ -29,11 +24,16 @@ const ScholarshipDetails = () => {
     }, [id]);
 
 
+
     if (!scholarship) {
         return <span className="loading loading-spinner loading-xl"></span>;
     }
     if (loading) {
         return <span className="loading loading-spinner loading-xl"></span>;
+    }
+    
+    if(!user){
+         navigate("/login");
     }
 
 

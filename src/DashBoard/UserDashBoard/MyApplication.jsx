@@ -76,6 +76,7 @@ const MyApplication = () => {
                 scholarshipName: reviewApp.scholarshipName,
                 universityName: reviewApp.universityName,
                 universityId: reviewApp.universityId,
+                 scholarshipId: reviewApp._id,
                 userName: user?.displayName,
                 userEmail: user?.email,
                 userImage: user?.photoURL || "",
@@ -181,7 +182,7 @@ const MyApplication = () => {
                 </div>
             )}
 
-          
+
             {editApp && (
                 <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
                     <div className="bg-white p-6 rounded w-11/12 sm:w-96">
@@ -223,7 +224,7 @@ const MyApplication = () => {
                 </div>
             )}
 
-         
+
             {reviewApp && (
                 <div className="fixed inset-0 bg-black bg-opacity-40 flex justify-center items-center">
                     <div className="bg-white p-6 rounded w-11/12 sm:w-96">

@@ -13,13 +13,9 @@ const Register = () => {
         e.preventDefault();
 
         const name = e.target.name.value;
-        const photo = e.target.photo.value;
+        const photoFile = e.target.photo.files[0]; 
         const email = e.target.email.value;
         const password = e.target.password.value;
-
-        // const userData = { name, photo, email, };
-        // console.log(userData)
-
 
         createUser(email, password)
             .then((result) => {
@@ -28,52 +24,52 @@ const Register = () => {
 
                 setError('');
 
-                updateProfile(user, {
-                    displayName: name,
-                    photoURL: photo
-                })
-                    .then(() => {
-                        console.log("Profile Updated");
-                        const saveUser = {
-                            name: name,
-                            email: email,
-                            photo: photo,
-                            role: "user"
-                        };
-
-                        fetch("http://localhost:5000/users", {
-                            method: "POST",
-                            headers: {
-                                "content-type": "application/json"
-                            },
-                            body: JSON.stringify(saveUser)
-                        })
-                            .then(res => res.json())
-                            .then(data => {
-                                console.log("User Saved in DB:", data);
-                                if (data.insertedId) {
-                                    Swal.fire({
-                                        position: "top-end",
-                                        icon: "success",
-                                        title: "Register Successfully",
-                                        showConfirmButton: false,
-                                        timer: 1500
-                                    })
-                                        .then(() => {
-                                            navigate('/')
-                                        })
-                                }
-                            });
-                    })
-                    .catch((error) => console.error("Profile Update Error:", error));
+                if (photoFile) {
+                    const reader = new FileReader();
+                    reader.readAsDataURL(photoFile);
+                    reader.onload = () => {
+                        const photoURL = reader.result;
+                        updateProfile(user, {
+                            displayName: name,
+                            photoURL: photoURL
+                        }).then(() => {
+                            saveUserToDB(name, email, photoURL);
+                        }).catch(err => console.error("Profile Update Error:", err));
+                    };
+                } else {
+                    updateProfile(user, { displayName: name })
+                        .then(() => saveUserToDB(name, email, ''))
+                        .catch(err => console.error("Profile Update Error:", err));
+                }
             })
             .catch((error) => {
                 console.error(error);
-                setError(error.message)
+                setError(error.message);
             });
+    };
 
 
-    }
+    const saveUserToDB = (name, email, photo) => {
+        const saveUser = { name, email, photo, role: "user" };
+        fetch("http://localhost:5000/users", {
+            method: "POST",
+            headers: { "content-type": "application/json" },
+            body: JSON.stringify(saveUser)
+        })
+            .then(res => res.json())
+            .then(data => {
+                console.log("User Saved in DB:", data);
+                if (data.insertedId) {
+                    Swal.fire({
+                        position: "top-end",
+                        icon: "success",
+                        title: "Register Successfully",
+                        showConfirmButton: false,
+                        timer: 1500
+                    }).then(() => navigate('/'));
+                }
+            });
+    };
 
     const handleGoogleSignIn = () => {
         signInWithGoogle()
@@ -101,9 +97,9 @@ const Register = () => {
                             showConfirmButton: false,
                             timer: 1500
                         })
-                        .then(() => {
-                            navigate("/")
-                        })
+                            .then(() => {
+                                navigate("/")
+                            })
                     });
 
             })
@@ -128,10 +124,8 @@ const Register = () => {
                         <input type="text" className="input" placeholder="Your Name"
                             name='name'
                             required />
-                        <label className="label">Photo URL</label>
-                        <input type="text" className="input" placeholder="Your Photo URL"
-                            name='photo'
-                            required />
+                        <label className="label">Photo</label>
+                        <input type="file" className="input" name="photo" accept="image/*" required />
                         <label className="label">Email</label>
                         <input type="email" className="input" placeholder=" Your Email"
                             name='email'
