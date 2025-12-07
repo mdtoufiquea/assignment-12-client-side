@@ -1,15 +1,18 @@
-import React, { useContext, useState } from "react";
+import React, { useState, useContext } from "react";
 import Swal from "sweetalert2";
-import { AuthContext } from "../../../Contexts/AuthContexts/AuthContext";
 import { useNavigate } from "react-router";
+import { AuthContext } from "../../../Contexts/AuthContexts/AuthContext";
+
 
 const AddScholarship = () => {
-    const navigate = useNavigate()
-    const { user, loading } = useContext(AuthContext)
+    const { user, loading: userLoading } = useContext(AuthContext);
+    const navigate = useNavigate();
+    const [loading, setLoading] = useState(false);
+
     const [formData, setFormData] = useState({
         scholarshipName: "",
         universityName: "",
-        universityImage: null,
+        universityImage: "",
         country: "",
         city: "",
         worldRank: "",
@@ -21,44 +24,42 @@ const AddScholarship = () => {
         serviceCharge: "",
         deadline: "",
         postDate: "",
-        email: "",
+        posterEmail: "",
     });
 
     const handleChange = (e) => {
-        const { name, value, type, files } = e.target;
-        setFormData({
-            ...formData,
-            [name]: type === "file" ? files[0] : value,
-        });
+        const { name, value } = e.target;
+        setFormData({ ...formData, [name]: value });
     };
+
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        setLoading(true);
 
-        const dataToSend = new FormData();
-        for (const key in formData) {
-            dataToSend.append(key, formData[key]);
+        if (!formData.universityName || !formData.universityImage) {
+            return Swal.fire({
+                icon: "warning",
+                title: "Missing Fields!",
+                text: "Please fill all required fields.",
+            });
         }
 
         try {
-            const res = await fetch("https://assignmetn-12-server-side.vercel.app/scholarships", {
+            const response = await fetch("https://assignmetn-12-server-side.vercel.app/scholarships", {
                 method: "POST",
-                body: dataToSend,
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
             });
 
-            const result = await res.json();
-
-            if (result.success) {
-                Swal.fire({
-                    icon: "success",
-                    title: "Success!",
-                    text: result.message,
-                });
+            const result = await response.json();
+            if (result.success || result.insertedId) {
+                Swal.fire("Success!", "Scholarship added.", "success");
 
                 setFormData({
                     scholarshipName: "",
                     universityName: "",
-                    universityImage: null,
+                    universityImage: "",
                     country: "",
                     city: "",
                     worldRank: "",
@@ -70,296 +71,260 @@ const AddScholarship = () => {
                     serviceCharge: "",
                     deadline: "",
                     postDate: "",
-                    email: "",
-                });
+                    posterEmail: ""
+                })
 
-                navigate('/allScholarships')
-
+                navigate("/allscholarships");
             } else {
-                Swal.fire({
-                    icon: "error",
-                    title: "Error!",
-                    text: result.message,
-                });
+                Swal.fire("Error!", "Something went wrong.", "error");
             }
         } catch (err) {
-            Swal.fire({
-                icon: "error",
-                title: "Error!",
-                text: err.message,
-            });
+            console.error(err);
+            Swal.fire("Error!", "Server error occurred.", "error");
+        } finally {
+            setLoading(false);
         }
     };
 
-    if (loading) {
-        return <span className="loading loading-spinner loading-xl"></span>
-    }
+
+
+    if (userLoading) return <p className="text-center mt-10">Loading...</p>;
+    if (user && !["admin", "moderator"].includes(user.role)) return null;
 
     return (
-        <div>
-            {
-                user?.role === "admin" || user?.role === "moderator" ? (<div className="min-h-screen md:py-10">
-                    <div className="mx-auto bg-white p-2 md:p-8 rounded-2xl shadow-lg">
-                        <h2 className="text-2xl font-bold text-center mb-6 text-blue-600">
-                            🎓 Add Scholarship Information
-                        </h2>
+        <div className="max-w-4xl mx-auto p-6 bg-white shadow-md rounded-md mt-10">
+            <h2 className="text-2xl font-bold mb-6 text-center">Add Scholarship</h2>
+            <form
+                onSubmit={handleSubmit}
+                className="grid grid-cols-1 md:grid-cols-2 gap-4"
+            >
+                {/* Scholarship Name */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">Scholarship Name</label>
+                    <input
+                        type="text"
+                        name="scholarshipName"
+                        value={formData.scholarshipName}
+                        onChange={handleChange}
+                        placeholder="Enter scholarship name"
+                        className="border p-2 rounded"
+                        required
+                    />
+                </div>
 
-                        <form
-                            onSubmit={handleSubmit}
-                            className="grid grid-cols-1 md:grid-cols-2 gap-6"
-                        >
+                {/* University Name */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">University Name</label>
+                    <input
+                        type="text"
+                        name="universityName"
+                        value={formData.universityName}
+                        onChange={handleChange}
+                        placeholder="Enter university name"
+                        className="border p-2 rounded"
+                        required
+                    />
+                </div>
 
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    Scholarship Name
-                                </label>
-                                <input
-                                    type="text"
-                                    required
-                                    name="scholarshipName"
-                                    value={formData.scholarshipName}
-                                    onChange={handleChange}
-                                    placeholder="Enter Scholarship Name"
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring focus:ring-blue-300"
-                                />
-                            </div>
+                {/* University Image URL */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">University Image URL</label>
+                    <input
+                        type="text"
+                        name="universityImage"
+                        value={formData.universityImage}
+                        onChange={handleChange}
+                        placeholder="Enter image URL"
+                        className="border p-2 rounded"
+                        required
+                    />
+                </div>
 
+                {/* Country */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">Country</label>
+                    <input
+                        type="text"
+                        name="country"
+                        value={formData.country}
+                        onChange={handleChange}
+                        placeholder="Enter country"
+                        className="border p-2 rounded"
+                        required
+                    />
+                </div>
 
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    University Name
-                                </label>
-                                <input
-                                    type="text"
-                                    required
-                                    name="universityName"
-                                    value={formData.universityName}
-                                    onChange={handleChange}
-                                    placeholder="Enter University Name"
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring focus:ring-blue-300"
-                                />
-                            </div>
+                {/* City */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">City</label>
+                    <input
+                        type="text"
+                        name="city"
+                        value={formData.city}
+                        onChange={handleChange}
+                        placeholder="Enter city"
+                        className="border p-2 rounded"
+                        required
+                    />
+                </div>
 
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    University Image/Logo
-                                </label>
-                                <input
-                                    type="file"
-                                    required
-                                    name="universityImage"
-                                    onChange={handleChange}
-                                    accept="image/*"
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-                                />
-                                <small className="text-gray-500">
-                                    (Upload image to imgbb, don’t paste link)
-                                </small>
-                            </div>
+                {/* World Rank */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">World Rank</label>
+                    <input
+                        type="number"
+                        name="worldRank"
+                        value={formData.worldRank}
+                        onChange={handleChange}
+                        placeholder="Enter world rank"
+                        className="border p-2 rounded"
+                        required
+                    />
+                </div>
 
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    University Country
-                                </label>
-                                <input
-                                    type="text"
-                                    required
-                                    name="country"
-                                    value={formData.country}
-                                    onChange={handleChange}
-                                    placeholder="Country"
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring focus:ring-blue-300"
-                                />
-                            </div>
+                {/* Subject Category (Dropdown) */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">Subject Category</label>
+                    <select
+                        name="subjectCategory"
+                        value={formData.subjectCategory}
+                        onChange={handleChange}
+                        className="border p-2 rounded"
+                        required
+                    >
+                        <option value="">Select Subject</option>
+                        <option value="Agriculture">Agriculture</option>
+                        <option value="Engineering">Engineering</option>
+                        <option value="Doctor">Doctor</option>
+                    </select>
+                </div>
 
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    University City
-                                </label>
-                                <input
-                                    type="text"
-                                    required
-                                    name="city"
-                                    value={formData.city}
-                                    onChange={handleChange}
-                                    placeholder="City"
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring focus:ring-blue-300"
-                                />
-                            </div>
+                {/* Scholarship Category (Dropdown) */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">Scholarship Category</label>
+                    <select
+                        name="scholarshipCategory"
+                        value={formData.scholarshipCategory}
+                        onChange={handleChange}
+                        className="border p-2 rounded"
+                        required
+                    >
+                        <option value="">Select Category</option>
+                        <option value="Full fund">Full fund</option>
+                        <option value="Partial">Partial</option>
+                        <option value="Self-fund">Self-fund</option>
+                    </select>
+                </div>
 
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    University World Rank
-                                </label>
-                                <input
-                                    type="number"
-                                    required
-                                    name="worldRank"
-                                    value={formData.worldRank}
-                                    onChange={handleChange}
-                                    placeholder="Enter World Rank"
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring focus:ring-blue-300"
-                                />
-                            </div>
+                {/* Degree (Dropdown) */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">Degree</label>
+                    <select
+                        name="degree"
+                        value={formData.degree}
+                        onChange={handleChange}
+                        className="border p-2 rounded"
+                        required
+                    >
+                        <option value="">Select Degree</option>
+                        <option value="Diploma">Diploma</option>
+                        <option value="Bachelor">Bachelor</option>
+                        <option value="Masters">Masters</option>
+                    </select>
+                </div>
 
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    Subject Category
-                                </label>
-                                <select
-                                    name="subjectCategory"
-                                    required
-                                    value={formData.subjectCategory}
-                                    onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-                                >
-                                    <option value="">Select Category</option>
-                                    <option>Agriculture</option>
-                                    <option>Engineering</option>
-                                    <option>Doctor</option>
-                                </select>
-                            </div>
+                {/* Tuition Fees */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">Tuition Fees</label>
+                    <input
+                        type="number"
+                        name="tuitionFees"
+                        value={formData.tuitionFees}
+                        onChange={handleChange}
+                        placeholder="Enter tuition fees/optional"
+                        className="border p-2 rounded"
+                    />
+                </div>
 
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    Scholarship Category
-                                </label>
-                                <select
-                                    name="scholarshipCategory"
-                                    required
-                                    value={formData.scholarshipCategory}
-                                    onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-                                >
-                                    <option value="">Select Category</option>
-                                    <option>Full fund</option>
-                                    <option>Partial</option>
-                                    <option>Self-fund</option>
-                                </select>
-                            </div>
+                {/* Application Fees */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">Application Fees</label>
+                    <input
+                        type="number"
+                        name="applicationFees"
+                        value={formData.applicationFees}
+                        onChange={handleChange}
+                        placeholder="Enter application fees"
+                        className="border p-2 rounded"
+                        required
+                    />
+                </div>
 
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">Degree</label>
-                                <select
-                                    name="degree"
-                                    required
-                                    value={formData.degree}
-                                    onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm"
-                                >
-                                    <option value="">Select Degree</option>
-                                    <option>Diploma</option>
-                                    <option>Bachelor</option>
-                                    <option>Masters</option>
-                                </select>
-                            </div>
+                {/* Service Charge */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">Service Charge</label>
+                    <input
+                        type="number"
+                        name="serviceCharge"
+                        value={formData.serviceCharge}
+                        onChange={handleChange}
+                        placeholder="Enter service charge"
+                        className="border p-2 rounded"
+                        required
+                    />
+                </div>
 
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    Tuition Fees (optional)
-                                </label>
-                                <input
-                                    type="number"
-                                    required
-                                    name="tuitionFees"
-                                    value={formData.tuitionFees}
-                                    onChange={handleChange}
-                                    placeholder="Enter Tuition Fees"
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring focus:ring-blue-300"
-                                />
-                            </div>
+                {/* Deadline */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">Deadline</label>
+                    <input
+                        type="date"
+                        name="deadline"
+                        value={formData.deadline}
+                        onChange={handleChange}
+                        className="border p-2 rounded"
+                        required
+                    />
+                </div>
 
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    Application Fees
-                                </label>
-                                <input
-                                    type="number"
-                                    required
-                                    name="applicationFees"
-                                    value={formData.applicationFees}
-                                    onChange={handleChange}
-                                    placeholder="Enter Application Fees"
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring focus:ring-blue-300"
-                                />
-                            </div>
+                {/* Post Date */}
+                <div className="flex flex-col">
+                    <label className="mb-1 font-semibold">Post Date</label>
+                    <input
+                        type="date"
+                        name="postDate"
+                        value={formData.postDate}
+                        onChange={handleChange}
+                        className="border p-2 rounded"
+                        required
+                    />
+                </div>
 
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    Service Charge
-                                </label>
-                                <input
-                                    type="number"
-                                    required
-                                    name="serviceCharge"
-                                    value={formData.serviceCharge}
-                                    onChange={handleChange}
-                                    placeholder="Enter Service Charge"
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring focus:ring-blue-300"
-                                />
-                            </div>
+                {/* Poster Email */}
+                <div className="flex flex-col col-span-2">
+                    <label className="mb-1 font-semibold">Poster Email</label>
+                    <input
+                        type="email"
+                        name="posterEmail"
+                        value={formData.posterEmail}
+                        onChange={handleChange}
+                        placeholder="Enter your email"
+                        className="border p-2 rounded"
+                        required
+                    />
+                </div>
 
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    Application Deadline
-                                </label>
-                                <input
-                                    type="date"
-                                    required
-                                    name="deadline"
-                                    value={formData.deadline}
-                                    onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring focus:ring-blue-300"
-                                />
-                            </div>
-
-                            <div>
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    Scholarship Post Date
-                                </label>
-                                <input
-                                    type="date"
-                                    required
-                                    name="postDate"
-                                    value={formData.postDate}
-                                    onChange={handleChange}
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring focus:ring-blue-300"
-                                />
-                            </div>
-
-                            <div className="md:col-span-2">
-                                <label className="block mb-2 font-bold text-gray-600">
-                                    Posted User Email
-                                </label>
-                                <input
-                                    type="email"
-                                    required
-                                    name="email"
-                                    value={formData.email}
-                                    onChange={handleChange}
-                                    placeholder="Enter your email"
-                                    className="w-full border border-gray-300 rounded-lg p-3 shadow-sm focus:ring focus:ring-blue-300"
-                                />
-                            </div>
-
-                            <div className="md:col-span-2">
-                                <button
-                                    type="submit"
-                                    className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg font-semibold shadow-md transition duration-300"
-                                >
-                                    ➕ Add Scholarship
-                                </button>
-                            </div>
-                        </form>
-                    </div>
-                </div>) : (Swal.fire({
-                    icon: "warning",
-                    title: "Access Denied",
-                    text: "Your are not Moderator or admin",
-                    timer: 2000,
-                    showConfirmButton: false
-                }))
-            }
+                {/* Submit Button */}
+                <div className="flex flex-col col-span-2">
+                    <button
+                        type="submit"
+                        className={`bg-blue-600 text-white px-6 py-2 rounded hover:bg-blue-700 transition w-full md:w-auto`}
+                        disabled={loading}
+                    >
+                        {loading ? "Adding..." : "Add Scholarship"}
+                    </button>
+                </div>
+            </form>
         </div>
     );
 };

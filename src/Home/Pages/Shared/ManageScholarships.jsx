@@ -6,7 +6,7 @@ import { AuthContext } from "../../../Contexts/AuthContexts/AuthContext";
 
 const ManageScholarships = () => {
     const [scholarships, setScholarships] = useState([]);
-    const [loading, setLoading] = useState(true);
+    // const [loading, setLoading] = useState(true);
     const [editingScholarship, setEditingScholarship] = useState(null);
     const [formData, setFormData] = useState({});
     const [selectedFile, setSelectedFile] = useState(null);
@@ -18,26 +18,20 @@ const ManageScholarships = () => {
     const subjectOptions = ["Agriculture", "Engineering", "Doctor"];
     const scholarshipCategoryOptions = ["Full fund", "Partial", "Self-fund"];
 
-    useEffect(() => {
-        fetchScholarships();
-    }, []);
+   
 
-    const fetchScholarships = () => {
-        setLoading(true);
+     useEffect(() => {
         fetch("https://assignmetn-12-server-side.vercel.app/scholarships")
-            .then((res) => res.json())
-            .then((data) => {
-                console.log("Fetched scholarships:", data?.data);
-                const validScholarships = (data?.data || []).filter(item => item && typeof item === 'object');
-                setScholarships(validScholarships);
-                setLoading(false);
-            })
-            .catch((error) => {
-                console.error("Fetch error:", error);
-                setScholarships([]);
-                setLoading(false);
-            });
-    };
+          .then((res) => res.json())
+          .then((data) => {
+            setScholarships(data || []);
+            
+          })
+          .catch(() => {
+            setScholarships([]);
+           
+          });
+      }, []);
 
     const handleChange = (e) => {
         const { name, value, type, files } = e.target;
@@ -187,14 +181,14 @@ const ManageScholarships = () => {
         setSelectedFile(null);
     };
 
-    if (loading) {
-        return (
-            <div className="p-5 flex justify-center items-center h-64">
-                <span className="loading loading-spinner loading-lg"></span>
-                <p className="ml-3 text-lg">Loading scholarships...</p>
-            </div>
-        );
-    }
+    // if (loading) {
+    //     return (
+    //         <div className="p-5 flex justify-center items-center h-64">
+    //             <span className="loading loading-spinner loading-lg"></span>
+    //             <p className="ml-3 text-lg">Loading scholarships...</p>
+    //         </div>
+    //     );
+    // }
 
     return (
         <div className="p-2 lg:p-6">
@@ -202,7 +196,7 @@ const ManageScholarships = () => {
 
             <div className="flex justify-end mb-3 lg:mb-4">
                 <button
-                    onClick={fetchScholarships}
+                    onClick={scholarships}
                     className="btn btn-sm lg:btn-md btn-outline"
                 >
                     <span className="hidden sm:inline">🔄 Refresh</span>
@@ -365,7 +359,7 @@ const ManageScholarships = () => {
                                 <span className="label-text font-semibold text-sm lg:text-base">University Image</span>
                                 {selectedFile && (
                                     <span className="label-text-alt text-green-600 text-xs">
-                                        ✅ {selectedFile.name}
+                                          {selectedFile.name}
                                     </span>
                                 )}
                             </label>

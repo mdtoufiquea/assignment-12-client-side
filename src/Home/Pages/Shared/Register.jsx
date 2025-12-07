@@ -13,7 +13,7 @@ const Register = () => {
         e.preventDefault();
 
         const name = e.target.name.value;
-        const photoFile = e.target.photo.files[0]; 
+        const photoURL = e.target.photo.value;
         const email = e.target.email.value;
         const password = e.target.password.value;
 
@@ -24,23 +24,12 @@ const Register = () => {
 
                 setError('');
 
-                if (photoFile) {
-                    const reader = new FileReader();
-                    reader.readAsDataURL(photoFile);
-                    reader.onload = () => {
-                        const photoURL = reader.result;
-                        updateProfile(user, {
-                            displayName: name,
-                            photoURL: photoURL
-                        }).then(() => {
-                            saveUserToDB(name, email, photoURL);
-                        }).catch(err => console.error("Profile Update Error:", err));
-                    };
-                } else {
-                    updateProfile(user, { displayName: name })
-                        .then(() => saveUserToDB(name, email, ''))
-                        .catch(err => console.error("Profile Update Error:", err));
-                }
+                updateProfile(user, {
+                    displayName: name,
+                    photoURL: photoURL || ''
+                })
+                    .then(() => saveUserToDB(name, email, photoURL || ''))
+                    .catch(err => console.error("Profile Update Error:", err));
             })
             .catch((error) => {
                 console.error(error);
@@ -125,7 +114,7 @@ const Register = () => {
                             name='name'
                             required />
                         <label className="label">Photo</label>
-                        <input type="file" className="input" name="photo" accept="image/*" required />
+                        <input type="text" className="input" name="photo" accept="Enter photo URL" required />
                         <label className="label">Email</label>
                         <input type="email" className="input" placeholder=" Your Email"
                             name='email'

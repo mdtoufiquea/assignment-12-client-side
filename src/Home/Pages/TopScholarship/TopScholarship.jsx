@@ -37,10 +37,7 @@ const TopScholarship = () => {
                     >
                         <figure>
                             <img className="w-full h-60 lg:h-110"
-                                src={`https://assignmetn-12-server-side.vercel.app/${scholarship.universityImage.replace(
-                                    /\\/g,
-                                    "/"
-                                )}`}
+                                src={scholarship.universityImage}
                                 alt={scholarship.universityName}
                             />
                         </figure>

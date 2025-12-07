@@ -91,9 +91,9 @@ const MyApplication = () => {
         }
     };
 
-    const handleViewDetails = (id) => {
+    const handleViewDetails = (scholarshipId) => {
         if (user) {
-            navigate(`/scholarships/${id}`);
+            navigate(`/scholarships/${scholarshipId}`);
         } else {
             navigate("/login");
         }

@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useContext } from "react";
-import { useParams } from "react-router";
+import { useNavigate, useParams } from "react-router";
 import { useForm } from "react-hook-form";
 import axios from "axios";
 import Swal from "sweetalert2";
@@ -10,6 +10,7 @@ import { AuthContext } from "../../../Contexts/AuthContexts/AuthContext";
 const stripePromise = loadStripe(import.meta.env.VITE_STRIPE_PK);
 
 export default function CheckOut() {
+    const navigate = useNavigate()
     const { id } = useParams();
     const [scholarship, setScholarship] = useState(null);
     const [paymentCompleted, setPaymentCompleted] = useState(false);
@@ -85,7 +86,7 @@ export default function CheckOut() {
                     scholarshipCategory: scholarship.scholarshipCategory,
                     subjectCategory: scholarship.subjectCategory,
                     applicantPhone: formData.phone,
-                    applicantPhoto: formData.photo[0]?.name || "",
+                    applicantPhoto: formData.photo?.name || "",
                     applicantVillage: formData.village,
                     applicantDistrict: formData.district,
                     applicantCountry: formData.country,
@@ -108,6 +109,7 @@ export default function CheckOut() {
                 if (response.data.success) {
                     Swal.fire("Success", "Scholarship Applied Successfully!", "success");
                 }
+                navigate('/user-dashboard/my-applications')
             } catch (error) {
                 Swal.fire("Error", error.message, "error");
             }
@@ -119,7 +121,7 @@ export default function CheckOut() {
 
                 <input {...register("phone")} placeholder="Phone Number" className="input input-bordered w-full" required />
                 <label>Applicant Photo</label>
-                <input type="file" {...register("photo")} className="file-input file-input-bordered w-full" required />
+                <input type="text" {...register("photo")} className="file-input file-input-bordered w-full" required />
                 <input {...register("village")} placeholder="Village" className="input input-bordered w-full" required />
                 <input {...register("district")} placeholder="District" className="input input-bordered w-full" required />
                 <input {...register("country")} placeholder="Country" className="input input-bordered w-full" required />

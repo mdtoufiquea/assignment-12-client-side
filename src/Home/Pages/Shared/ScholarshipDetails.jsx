@@ -44,10 +44,7 @@ const ScholarshipDetails = () => {
             >
                 <figure>
                     <img
-                        src={`https://assignmetn-12-server-side.vercel.app/${scholarship.universityImage.replace(
-                            /\\/g,
-                            "/"
-                        )}`}
+                        src={scholarship.universityImage}
                         alt={scholarship.universityName}
                     />
                 </figure>
